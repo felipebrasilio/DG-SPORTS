@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Atleta {
+  id            String    @id @default(cuid())
+  nome          String
+  dataNascimento DateTime
+  nacionalidade  String
+  posicao       String?
+  altura        Float?
+  peso          Float?
+  email         String    @unique
+  telefone      String?
+  cpf           String    @unique
+  rg            String?
+  passaporte    String?
+  endereco      String?
+  cidade        String?
+  estado        String?
+  pais          String?
+  cep           String?
+  status        String    @default("ativo")
+  observacoes   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  contratos     Contrato[]
+  desempenhos   Desempenho[]
+  financas      Financa[]
+}
+
+model Contrato {
+  id              String    @id @default(cuid())
+  atletaId        String
+  clube           String
+  dataInicio      DateTime
+  dataFim         DateTime
+  valorContrato   Float
+  moeda           String    @default("BRL")
+  tipoContrato    String
+  status          String    @default("ativo")
+  clausulas       String?
+  observacoes     String?
+  documentos      String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  atleta          Atleta    @relation(fields: [atletaId], references: [id])
+}
+
+model Desempenho {
+  id            String    @id @default(cuid())
+  atletaId      String
+  data          DateTime
+  tipo          String
+  valor         Float
+  unidade       String
+  observacoes   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  atleta        Atleta    @relation(fields: [atletaId], references: [id])
+}
+
+model Financa {
+  id            String    @id @default(cuid())
+  atletaId      String
+  data          DateTime
+  tipo          String
+  valor         Float
+  moeda         String    @default("BRL")
+  descricao     String?
+  status        String    @default("pendente")
+  comprovante   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  atleta        Atleta    @relation(fields: [atletaId], references: [id])
+}
+
+model Usuario {
+  id            String    @id @default(cuid())
+  nome          String
+  email         String    @unique
+  senha         String
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
