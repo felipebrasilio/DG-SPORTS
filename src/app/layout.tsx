@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@/components/analytics/analytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,58 +13,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "DG Sports Management | Gestão de Atletas e Contratos Esportivos",
-  description: "Plataforma completa para gestão de atletas, contratos, finanças e análise de desempenho esportivo. Maximize o potencial da sua carreira esportiva.",
-  keywords: "gestão de atletas, contratos esportivos, análise de desempenho, finanças esportivas, carreira esportiva",
-  authors: [{ name: "DG Sports" }],
-  creator: "DG Sports Management",
-  publisher: "DG Sports Management",
-  openGraph: {
-    title: "DG Sports Management | Gestão de Atletas e Contratos Esportivos",
-    description: "Plataforma completa para gestão de atletas, contratos, finanças e análise de desempenho esportivo.",
-    url: "https://dgsports.com",
-    siteName: "DG Sports Management",
-    images: [
-      {
-        url: "/LOGODG.jpg",
-        width: 800,
-        height: 600,
-        alt: "DG Sports Management Logo",
-      },
-    ],
-    locale: "pt-BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "DG Sports Management | Gestão de Atletas e Contratos Esportivos",
-    description: "Plataforma completa para gestão de atletas, contratos, finanças e análise de desempenho esportivo.",
-    images: ["/LOGODG.jpg"],
-    creator: "@dgsports",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: "google-site-verification-code",
-  },
-  alternates: {
-    canonical: "https://dgsports.com",
-    languages: {
-      'pt-BR': "https://dgsports.com",
-      'en-US': "https://dgsports.com/en",
-    },
-  },
-};
+import { generateMetadata } from '@/lib/meta-config';
+import { generateSchema } from '@/lib/schema-config';
+
+export const metadata = generateMetadata('/');
+
+export function generateViewport() {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  };
+}
+
 
 export default function RootLayout({
   children,
@@ -72,10 +35,42 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <link rel="canonical" href="https://dgsports.com" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="theme-color" content="#0070f3" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="DG Sports" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#0070f3" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta property="og:locale" content="pt_BR" />
+        <meta property="og:site_name" content="DG Sports Management" />
+        <meta name="twitter:site" content="@dgsports" />
+        <meta name="twitter:creator" content="@dgsports" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="google-site-verification" content="google-site-verification-code" />
+        <link rel="alternate" hrefLang="pt-BR" href="https://dgsports.com" />
+        <link rel="alternate" hrefLang="en-US" href="https://dgsports.com/en" />
+        <link rel="alternate" hrefLang="x-default" href="https://dgsports.com" />
+        <meta name="application-name" content="DG Sports Management" />
+        <meta name="apple-mobile-web-app-title" content="DG Sports Management" />
+        <meta name="msapplication-starturl" content="/" />
+        <meta name="next-head-count" content="30" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: generateSchema('/') }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
