@@ -16,7 +16,7 @@ export default function Home() {
           >
             Por{' '}
             <Image
-              src="/LOGODG.jpg"
+              src="/LOGODG.svg"
               alt="DG Sports Logo"
               width={100}
               height={24}

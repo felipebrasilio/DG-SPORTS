@@ -12,7 +12,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Image
-                src="/LOGODG.jpg"
+                src="/LOGODG.svg"
                 alt="DG Sports Management"
                 width={40}
                 height={40}

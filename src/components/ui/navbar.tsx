@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { LanguageSwitcher } from './language-switcher';
 
 type NavItem = {
   label: string;
@@ -57,10 +58,10 @@ export function Navbar() {
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/LOGODG.jpg"
-            alt="DG Sports Management"
-            width={50}
-            height={50}
+            src="/LOGODG.svg"
+            alt="DG Sports Logo"
+            width={40}
+            height={40}
             className="rounded-full"
           />
           <span className="text-xl font-bold bg-gradient-to-r from-blue-900 to-amber-500 bg-clip-text text-transparent">
@@ -131,6 +132,7 @@ export function Navbar() {
 
         {/* Login/Register Buttons */}
         <div className="hidden lg:flex items-center space-x-4">
+          <LanguageSwitcher />
           <Link
             href="/login"
             className="text-gray-700 dark:text-gray-200 hover:text-blue-900 dark:hover:text-amber-500 font-medium"

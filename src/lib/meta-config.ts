@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Locale, i18n } from './i18n-config';
 
 type PageMetadata = {
   title: string;
@@ -60,28 +61,62 @@ const pageMetadata: Record<string, PageMetadata> = {
   }
 };
 
-export function generateMetadata(path: string): Metadata {
-  const page = path.split('/')[1] || 'home';
-  const metadata = pageMetadata[page];
+export function generateMetadata(path: string, locale: Locale = 'pt-BR'): Metadata {
+  const pagePath = path.endsWith('/') ? path.slice(0, -1) : path;
+  const pageKey = pagePath.substring(1) || '/';
+  const page = pageMetadata[pageKey];
 
-  if (!metadata) return defaultMetadata;
+  if (!page) {
+    return defaultMetadata;
+  }
+
+  // Ajustar título e descrição com base no idioma
+  let title = page.title;
+  let description = page.description;
+  
+  if (locale === 'en-US') {
+    title = title.replace('Gestão de', 'Management of').replace('Esportivos', 'Sports');
+    description = description.replace('Plataforma completa', 'Complete platform').replace('gestão de atletas', 'athlete management');
+  } else if (locale === 'es-ES') {
+    title = title.replace('Gestão de', 'Gestión de').replace('Esportivos', 'Deportivos');
+    description = description.replace('Plataforma completa', 'Plataforma completa').replace('gestão de atletas', 'gestión de atletas');
+  }
 
   return {
     ...defaultMetadata,
-    title: metadata.title,
-    description: metadata.description,
-    keywords: metadata.keywords.join(', '),
+    title: title,
+    description: description,
+    keywords: page.keywords.join(', '),
     openGraph: {
-      title: metadata.title,
-      description: metadata.description,
-      images: metadata.image ? [{ url: metadata.image }] : undefined,
+      title: title,
+      description: description,
+      url: `https://dgsports.com${locale !== 'pt-BR' ? '/' + locale.split('-')[0].toLowerCase() : ''}${path}`,
+      siteName: 'DG Sports Management',
+      images: [
+        {
+          url: page.image || '/LOGODG.svg',
+          width: 800,
+          height: 600,
+          alt: 'DG Sports Management',
+        },
+      ],
+      locale: locale.replace('-', '_'),
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: metadata.title,
-      description: metadata.description,
-      images: metadata.image ? [metadata.image] : undefined,
+      title: title,
+      description: description,
+      images: [page.image || '/LOGODG.svg'],
+      creator: '@dgsports',
+    },
+    alternates: {
+      canonical: `https://dgsports.com${path}`,
+      languages: {
+        'pt-BR': `https://dgsports.com${path}`,
+        'en-US': `https://dgsports.com/en${path}`,
+        'es-ES': `https://dgsports.com/es${path}`,
+      },
     },
   };
 }
